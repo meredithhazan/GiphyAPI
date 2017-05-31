@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>World Cities Gifs</title>
+</head>
+<body>
+	<div class="container">
+		<h1>Legendary Cities of the World</h1>
+		<p>Click on each city below, some of my personal favorites, to see what the Gif world thinks of them.</p>
+		<!-- Buttons go here -->
+		<div id="city-buttons"></div>
+		<!-- User input will go here -->
+		<form id="city-search">
+			<label for "city-input">Add your favorite city: </label>
+			<input type="text" id="city-input"><br />
+
+			<input id="addCity" type="submit" value="Submit">
+		</form>
+		<!-- Gifs will display here -->
+		<div id="cities">
+		</div>
+	</div>
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+<script type="text/javascript">
+	var topics = ["London", "Paris", "Rome", "Barcelona", "Chicago", "San Francisco", "Seattle"];
+
+	// displayGifs function re-renders the HTML to display the appropriate content
+    function displayGifs() {
+
+    	var city = $(this).attr("data-name");
+    	var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + city + "&limit=10&api_key=dc6zaTOxFJmzC";
+
+    	$.ajax({
+          url: queryURL,
+          method: "GET"
+        }).done(function(response) {
+
+        	var cityDiv = $("<div class='gif'>");
+
+        	var rating = response.rating;
+        	var showRating = $("<p>").text("Rated: " + rating);
+        	$cityDiv.append(showRating);
+        };
+    };
+
+	// Function to render clickable city buttons
+	function renderButtons() {
+
+	
+		// Creating an AJAX call for the specific city button being clicked
+
+	};
+
+	// This function handles events where a movie button is clicked
+	$("#add-city").on("click", function(event) {
+        event.preventDefault();
+	// This line grabs the input from the textbox
+        var city = $("#city-input").val().trim();
+
+        // Adding movie from the textbox to our array
+        topics.push(city);
+
+        // Calling renderButtons which handles the processing of our movie array
+        renderButtons();
+      });
+
+
+
+</script>
+</body>
+</html>
