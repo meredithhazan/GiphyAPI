@@ -2,16 +2,35 @@
 <html>
 <head>
 	<title>World Cities Gifs</title>
+
+	<style type="text/css">
+	    button,
+	    div,
+	    form,
+	    input {
+	      margin: 10px;
+	    }
+
+	    button {
+	    	font-size: 14px;
+	    }
+
+	    #addCity {
+	    	font-size: 16px;
+	    }
+
+  	</style>
+
 </head>
 <body>
 	<div class="container">
 		<h1>Legendary Cities of the World</h1>
-		<p>Click on each city below, some of my personal favorites, to see what the Gif world thinks of them.</p>
+		<p>Click on a city below, some of my personal favorites, to see what the Gif world associates with them.</p><hr />
 		<!-- Buttons go here -->
 		<div id="city-buttons"></div>
 		<!-- User input will go here -->
 		<form id="city-search">
-			<label for "city-input">Add your favorite city: </label>
+			<label for="city-input">Try it our with your favorite city: </label>
 			<input type="text" id="city-input"><br />
 
 			<input id="addCity" type="submit" value="Submit">
@@ -26,47 +45,117 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
 <script type="text/javascript">
-	var topics = ["London", "Paris", "Rome", "Barcelona", "Chicago", "San Francisco", "Seattle"];
+	
+	var topics = ["London", "Paris", "Rome", "Barcelona", "Nairobi", "Chicago", "San Francisco", "Seattle", "Los Angeles"];
 
-	// displayGifs function re-renders the HTML to display the appropriate content
+	// this callback function re-renders the HTML to display the appropriate content
     function displayGifs() {
 
     	var city = $(this).attr("data-name");
     	var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + city + "&limit=10&api_key=dc6zaTOxFJmzC";
 
+
+    	// Creating an AJAX call for the specific city button being clicked
     	$.ajax({
           url: queryURL,
           method: "GET"
         }).done(function(response) {
+        	// Empty div each time a new button is pushed
+        	$("#cities").empty();
+        	console.log(response);
+        	// Once the ajax request is done, receive rating & image results
+        	
+        	
+        	var results = response.data;
+      		// For loop created to loop through results, then create & display in these divs on the page
+        	for (var i = 0; i < results.length; i++) {
 
-        	var cityDiv = $("<div class='gif'>");
+        		var cityDiv = $("<div class='imagesDiv'>");
 
-        	var rating = response.rating;
-        	var showRating = $("<p>").text("Rated: " + rating);
-        	$cityDiv.append(showRating);
-        };
-    };
+        		var cityImageSt = results[i].images.fixed_width_still.url;
+        		var cityImageAn = results[i].images.fixed_width.url;
+        		var showImage = $("<img>").attr("src", cityImageSt);
+        		showImage.attr("data-still", cityImageSt);
+        		showImage.attr("data-animate", cityImageAn);
+        		showImage.attr("alt", "city image");
+        		showImage.attr("class", "gif");
+        		showImage.attr("data-state", "still");
+        		cityDiv.append(showImage);
+
+        		var rating = results[i].rating;
+        		var showRating = $("<p>").text("Rated: " + rating);
+        		cityDiv.append(showRating);
+
+        		$("#cities").append(cityDiv);
+        	};
+
+        	$(".gif").on("click", function() {
+        		console.log("Clicked");
+        		var state = $(this).attr("data-state");
+        		console.log(this);
+        		if (state === "still") {
+        		$(this).attr("src", $(this).attr("data-animate"));
+        		$(this).attr("data-state", "animate");
+      			} else {
+        		$(this).attr("src", $(this).attr("data-still"));
+        		$(this).attr("data-state", "still");
+      			};
+    		});
+    	});	
+    };	
 
 	// Function to render clickable city buttons
 	function renderButtons() {
-
+		$("#city-buttons").empty();
 	
-		// Creating an AJAX call for the specific city button being clicked
+		for (var t = 0; t < topics.length; t++) {
+		
+		var a = $("<button>");
+          // Adding a class of movie to our button
+          a.addClass("city");
+          // Adding a data-attribute
+          a.attr("data-name", topics[t]);
+          // Providing the initial button text
+          a.text(topics[t]);
+          // Adding the button to the buttons-view div
+          $("#city-buttons").append(a);	
 
-	};
+		};
+	};	
 
-	// This function handles events where a movie button is clicked
-	$("#add-city").on("click", function(event) {
+	// This function handles events where a city is added in the input box
+	$("#addCity").on("click", function(event) {
         event.preventDefault();
 	// This line grabs the input from the textbox
         var city = $("#city-input").val().trim();
 
-        // Adding movie from the textbox to our array
+        // Adding city from the textbox to our array
         topics.push(city);
 
-        // Calling renderButtons which handles the processing of our movie array
+        // Calling renderButtons which handles the processing of our topics array
         renderButtons();
-      });
+        $("#city-input").val("");
+    });
+
+    
+    $(document).ready(function() {
+    	renderButtons();
+    	$(document).on("click", ".city", displayGifs);
+    	
+    	/*$(document).on("click", ".gif", function() {
+        		// console.log("Clicked");
+        		var state = $(this).attr("data-state");
+        		console.log(this);
+
+        		if (state === "still") {
+        		$(this).attr("src", $(this).attr("data-animate"));
+        		$(this).attr("data-state", "animate");
+      			} else {
+        		$(this).attr("src", $(this).attr("data-still"));
+        		$(this).attr("data-state", "still");
+      			};
+    	});*/
+    });	
 
 
 
