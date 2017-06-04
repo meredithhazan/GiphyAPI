@@ -2,8 +2,14 @@
 <html>
 <head>
 	<title>World Cities Gifs</title>
+	<link href="https://fonts.googleapis.com/css?family=Codystar:300" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
 
 	<style type="text/css">
+	    body {
+	    	background-color: papayawhip;
+	    }
+
 	    button,
 	    div,
 	    form,
@@ -11,12 +17,36 @@
 	      margin: 10px;
 	    }
 
+	    button:hover {
+			font-size: 20px; 
+			background-color: mintcream;
+			border-style: dotted;
+	    }
+	    p,
+	    label {
+	    	font-family: 'Raleway', sans-serif;
+	    }
+
+	    h1, .city {
+	    	font-family: 'Codystar', cursive;
+	    	font-weight: bold;
+	    }
+
 	    button {
-	    	font-size: 14px;
+	    	font-size: 16px;
+	    }
+
+	    #city-input:focus {
+	    	background-color: mintcream;
 	    }
 
 	    #addCity {
 	    	font-size: 16px;
+	    	font-family: 'Raleway', sans-serif;
+	    }
+
+	    #cities {
+	    	display: flex;
 	    }
 
   	</style>
